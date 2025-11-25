@@ -141,13 +141,20 @@ public class CampfireKettleBlock extends FilledKettleBlock {
 		return super.getSoundType(state, world, pos, entity);
 	}
 	
-	public boolean isKettleSelected(BlockPos pos, LivingEntity entity) {
-		Vector3d startVec = entity.getEyePosition(1);
-		Vector3d endVec = startVec.add(entity.getLookVec().scale(entity.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue()));
-		RayTraceResult subHit = KETTLE_SHAPE.rayTrace(startVec, endVec, pos);
-		
-		return subHit != null && subHit.getType() == Type.BLOCK;
-	}
+    public boolean isKettleSelected(BlockPos pos, LivingEntity entity) {
+        Vector3d startVec = entity.func_174824_e(1.0F);
+    
+        ModifiableAttributeInstance reachAttribute = entity.func_110148_a((Attribute)ForgeMod.REACH_DISTANCE.get());
+        double reachDistance = 5.0D;
+    
+        if (reachAttribute != null) {
+            reachDistance = reachAttribute.func_111126_e();
+        }
+    
+        Vector3d endVec = startVec.func_178787_e(entity.func_70040_Z().func_186678_a(reachDistance));
+        BlockRayTraceResult blockRayTraceResult = KETTLE_SHAPE.func_212433_a(startVec, endVec, pos);
+        return (blockRayTraceResult != null && blockRayTraceResult.func_216346_c() == RayTraceResult.Type.BLOCK);
+    }
 	
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
